@@ -1,0 +1,76 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1749966899831,
+      "tag": "0003_volatile_warbound",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1749967417497,
+      "tag": "0004_uneven_bruce_banner",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1751179454584,
+      "tag": "0005_icy_starhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1751179965413,
+      "tag": "0006_light_tinkerer",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1751180025243,
+      "tag": "0007_giant_sleepwalker",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1751180224675,
+      "tag": "0008_previous_leech",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1751180257295,
+      "tag": "0009_flimsy_rage",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1751262571198,
+      "tag": "0010_long_spencer_smythe",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1751262648405,
+      "tag": "0011_shallow_marrow",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1751263035488,
+      "tag": "0012_yummy_solo",
+      "breakpoints": true
+    }
+  ]
+}
