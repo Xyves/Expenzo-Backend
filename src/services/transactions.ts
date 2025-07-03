@@ -1,31 +1,28 @@
 import { and, asc, desc, eq, gte, lte, sql } from "drizzle-orm";
-import { db } from "./db";
-import { transactions } from "./schema";
+import { transactions } from "@/db/schema";
 
 export async function getTransactions(
   userId,
   limit,
   startDate,
   endDate,
-  order
+  order,
+  db
 ) {
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  const query = db.query.transactions.findMany({
+  const query = await db.query.transactions.findMany({
     where: and(
       eq(transactions.user_id, userId),
-      gte(transactions.date, startDate || startOfMonth),
-      lte(transactions.date, endDate || endOfMonth)
+      startDate ? gte(transactions.date, new Date(startDate)) : undefined,
+      endDate ? lte(transactions.date, new Date(endDate)) : undefined
     ),
-    limit: limit,
+    limit,
     orderBy: [
       order === "asc" ? asc(transactions.date) : desc(transactions.date),
     ],
   });
   return query;
 }
-export async function getTopCategories(userId, limit, startDate, endDate) {
+export async function getTopCategories(userId, limit, startDate, endDate, db) {
   const result = await db.execute(sql`
   SELECT c.id AS category_id, c.name AS category_name, SUM(t.amount) AS total
   FROM transactions t

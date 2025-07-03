@@ -1,5 +1,4 @@
-import { db } from "../db/db.js";
-export async function getBudgets(userId, limit) {
+export async function getBudgets(userId, limit, db) {
   if (limit) {
     return db.budgets.findMany({
       where: { userId },
