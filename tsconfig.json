@@ -3,9 +3,9 @@
     "module": "ESNext",
     "target": "ES2020",
     "moduleResolution": "Node",
-    "baseUrl": "./src",
+    "baseUrl": ".", // this is usually the root
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"] // adjust based on your folder structure
     },
     "outDir": "dist",
     "rootDir": "src",

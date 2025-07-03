@@ -13,7 +13,6 @@ async function startApolloServer() {
       typeDefs,
       resolvers,
     });
-    console.log(printSchema(schema));
 
     const server = new ApolloServer({ schema });
 
@@ -21,7 +20,6 @@ async function startApolloServer() {
       listen: { port: 4000 },
       context: async ({ req }) => {
         const db = await getDb();
-        console.log("Context DB:", db);
         return { db };
       },
     });
