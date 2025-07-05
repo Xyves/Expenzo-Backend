@@ -34,3 +34,18 @@ export async function deleteCategories(userId, id, db) {
     return { success: false };
   }
 }
+export async function createCategory(userId, name, icon, type, db) {
+  try {
+    const result = await db.insert(categories).values({
+      userId,
+      name,
+      icon,
+      type,
+    });
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return { success: false };
+  }
+}

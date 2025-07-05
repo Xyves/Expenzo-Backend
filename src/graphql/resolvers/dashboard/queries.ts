@@ -1,5 +1,5 @@
 import { getBudgets } from "@/services/budgets";
-import { getTransactions } from "@/services/transactions";
+import { getTopCategories, getTransactions } from "@/services/transactions";
 import { getBalance, getMonthlyFinancialSummary } from "@/services/users";
 
 export const dashboardQueries = {
@@ -8,10 +8,15 @@ export const dashboardQueries = {
     const { userId } = args;
     const balance = await getBalance(userId, db);
     const financials = await getMonthlyFinancialSummary(userId, db);
-    const reducedValues = financials.reduce();
+    const safeFinancials = {
+      income: financials.income ?? 0,
+      expense: financials.expense ?? 0,
+    };
+
+    console.log(balance, financials);
     return {
-      balance,
-      reducedValues,
+      balance: balance ?? 0,
+      financials: safeFinancials,
     };
   },
   recentTransactions: async (_parent: unknown, args, context) => {
@@ -28,7 +33,26 @@ export const dashboardQueries = {
   },
   recentTopCategories: async (_parent, args, context) => {
     const { db } = context;
+    const { userId, startDate, endDate } = args;
+    const now = new Date();
+    const formatFullDate = (d: Date) => d.toISOString();
+    const defaultStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const defaultEnd = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999
+    );
 
-    const { userId } = args;
+    const safeStartDate = startDate ? new Date(startDate) : defaultStart;
+    const safeEndDate = endDate ? new Date(endDate) : defaultEnd;
+
+    const formattedStart = safeStartDate.toISOString();
+    const formattedEnd = safeEndDate.toISOString();
+
+    return await getTopCategories(userId, formattedStart, formattedEnd, db);
   },
 };
