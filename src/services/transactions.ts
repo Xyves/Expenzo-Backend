@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, lte, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, lte, SQL, sql } from "drizzle-orm";
 import { transactions } from "@/db/schema/transactions.js";
 import { users } from "@/db/schema/users.js";
 export async function getTransactions(
@@ -32,14 +32,6 @@ export async function createTransaction(
   db
 ) {
   try {
-    // console.log("object:", {
-    //   userId,
-    //   type,
-    //   date,
-    //   note,
-    //   amount,
-    //   category_id,
-    // });
     const now = new Date();
     const safeDate = date ?? now;
     const transactResponse = await db.transaction(async (tx) => {
@@ -53,9 +45,12 @@ export async function createTransaction(
       });
       const newTransactionId = insertResult.insertId;
 
-      // Fetch the inserted transaction
+      // Fetch the new transaction
       const insertedTransaction = await tx.query.transactions.findFirst({
-        where: (fields, { eq }) => eq(fields.id, newTransactionId),
+        where: (
+          fields: typeof transactions.$inferSelect,
+          { eq }: { eq: <T>(column: SQL.Aliased<T>, value: T) => SQL }
+        ) => eq(fields.id, newTransactionId),
       });
       console.log(insertedTransaction);
       const [userInsertResult] = await tx
@@ -72,8 +67,11 @@ export async function createTransaction(
         .where(eq(users.id, userId));
 
       const updatedUser = await tx.query.users.findFirst({
-        where: (fields, { eq }) => eq(fields.id, userId),
-        columns: { balance: true }, // only fetch balance
+        where: (
+          fields: typeof users.$inferSelect,
+          { eq }: { eq: <T>(column: SQL.Aliased<T>, value: T) => SQL }
+        ) => eq(fields.id, userId),
+        columns: { balance: true },
       });
 
       return {

@@ -1,4 +1,8 @@
-import { createTransaction, deleteTransaction } from "@/services/transactions";
+import {
+  createTransaction,
+  deleteTransaction,
+  updateTransaction,
+} from "@/services/transactions";
 
 export const transactionMutations = {
   deleteTransaction: async (_parent, args, context) => {
@@ -7,7 +11,7 @@ export const transactionMutations = {
     const deletedTransaction = await deleteTransaction(id, userId, db);
     return deletedTransaction;
   },
-  createNewTransaction: async (_parent, args, context) => {
+  createTransactionRequest: async (_parent, args, context) => {
     const { db } = context;
     const { userId, type, date, note, amount, category_id } = args;
     const createdTransaction = await createTransaction(
@@ -19,6 +23,20 @@ export const transactionMutations = {
       category_id,
       db
     );
-    return createTransaction;
+    return createdTransaction;
+  },
+  updateTransactionRequest: async (_parent, args, context) => {
+    const { db } = context;
+    const { id, userId, type, date, note, amount, category_id } = args;
+    const updatedTransaction = await updateTransaction(
+      id,
+      userId,
+      type,
+      date,
+      note,
+      amount,
+      category_id,
+      db
+    );
   },
 };
