@@ -88,22 +88,7 @@ export async function createTransaction(
   }
   // Add to transactions + update budget + u
 }
-export async function getTopCategories(userId, startDate, endDate, db) {
-  console.log(userId, startDate, endDate);
-  const [rows] = await db.execute(sql`
-  SELECT c.id AS category_id, c.name AS category_name, SUM(t.amount) AS total,c.icon AS category_icon, c.isDefault as isDefault
-  FROM transactions t
-  JOIN categories c ON t.category_id = c.id
-  WHERE t.user_id = ${userId}
-    AND t.date BETWEEN ${startDate} AND ${endDate}
-    AND c.type = "Expense"
-  GROUP BY c.id, c.name
-  ORDER BY total DESC
-`);
-  console.log("result is:", rows);
 
-  return rows;
-}
 export async function deleteTransaction(id, userId, db) {
   try {
     const result = await db
@@ -129,6 +114,20 @@ export async function updateTransaction(
   db
 ) {
   try {
-    const result = await db.update(transactions).set({});
+    const data = {
+      ...(type !== undefined && { type }),
+      ...(date !== undefined && { date }),
+      ...(note !== undefined && { note }),
+      ...(amount !== undefined && { amount }),
+      ...(category_id !== undefined && { category_id }),
+    };
+
+    await db.update(transactions).set(data).where(eq(transactions.id, id));
+    const updated = await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.id, id));
+    console.log(updated);
+    return updated[0];
   } catch (error) {}
 }

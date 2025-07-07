@@ -38,5 +38,6 @@ export const transactionMutations = {
       category_id,
       db
     );
+    return updatedTransaction;
   },
 };

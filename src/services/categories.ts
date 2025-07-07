@@ -65,3 +65,17 @@ export async function createCategory(name, icon, userId, type, db) {
     return { success: false };
   }
 }
+export async function getTopCategories(userId, startDate, endDate, db) {
+  console.log(userId, startDate, endDate);
+  const [rows] = await db.execute(sql`
+  SELECT c.id AS category_id, c.name AS category_name, SUM(t.amount) AS total,c.icon AS category_icon, c.isDefault as isDefault
+  FROM transactions t
+  JOIN categories c ON t.category_id = c.id
+  WHERE t.user_id = ${userId}
+    AND t.date BETWEEN ${startDate} AND ${endDate}
+    AND c.type = "Expense"
+  GROUP BY c.id, c.name
+  ORDER BY total DESC
+`);
+  return rows;
+}

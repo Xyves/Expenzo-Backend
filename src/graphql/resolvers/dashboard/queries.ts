@@ -1,6 +1,7 @@
 import { getBudgets } from "@/services/budgets";
-import { getTopCategories, getTransactions } from "@/services/transactions";
+import { getTransactions } from "@/services/transactions";
 import { getBalance, getMonthlyFinancialSummary } from "@/services/users";
+import { getTopCategories } from "@/services/categories";
 
 export const dashboardQueries = {
   dashboardSummary: async (_parent, args, context) => {
@@ -35,7 +36,6 @@ export const dashboardQueries = {
     const { db } = context;
     const { userId, startDate, endDate } = args;
     const now = new Date();
-    const formatFullDate = (d: Date) => d.toISOString();
     const defaultStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const defaultEnd = new Date(
       now.getFullYear(),
