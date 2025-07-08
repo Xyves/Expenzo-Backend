@@ -1,1 +1,0 @@
-ALTER TABLE `categories` MODIFY COLUMN `type` enum('income','expense');
