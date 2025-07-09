@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1752043253291,
+      "tag": "0000_vengeful_mimic",
+      "breakpoints": true
+    }
+  ]
 }

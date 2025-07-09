@@ -1,0 +1,1 @@
+ALTER TABLE `budgets` ADD `interval` enum('daily','weekly','monthly') DEFAULT 'weekly';
