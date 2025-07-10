@@ -14,23 +14,25 @@ export async function getBudgets(userId, limit, db) {
     });
   }
 }
-export async function updateBudget(
+export async function updateBudget({
   id,
   userId,
   categoryId,
   amount_limit,
   startDate,
+  interval,
   endDate,
-  db
-) {
+  db,
+}) {
   try {
     const data = {
       ...(categoryId !== undefined && { categoryId }),
+      ...(interval !== undefined && { interval }),
       ...(amount_limit !== undefined && { amount_limit }),
       ...(startDate !== undefined && { startDate }),
       ...(endDate !== undefined && { endDate }),
     };
-    await db
+    const result = await db
       .update(budgets)
       .set(data)
       .where(and(eq(budgets.id, id)), eq(budgets.userId, userId));
@@ -38,25 +40,49 @@ export async function updateBudget(
       .select()
       .from(budgets)
       .where(and(eq(budgets.id, id), eq(budgets.userId, userId)));
-    console.log(updatedBudget);
     return updatedBudget[0];
   } catch (error) {}
 }
 export async function createBudgets(
-  id,
   userId,
   categoryId,
   amount_limit,
+  interval,
   startDate,
   endDate,
   db
 ) {
   try {
-    const newBudget = await db
+    console.log({
+      userId,
+      categoryId,
+      amount_limit,
+      startDate,
+      endDate,
+      types: {
+        userId: typeof userId,
+        startDate: typeof startDate,
+      },
+    });
+    const result = await db
       .insert(budgets)
-      .values({ id, userId, categoryId, amount_limit, startDate, endDate });
-    const budget = await db.select().from(budgets).where(eq(budgets.id, id));
-    console.log(budget);
+      .values({
+        userId,
+        categoryId,
+        amount_limit,
+        startDate: startDate,
+        endDate: startDate,
+        isArchived: false,
+        interval,
+      })
+      .execute();
+    const budgetId = result[0].insertId ?? result.insertId;
+    console.log(budgetId, result.insertId);
+    const budget = await db
+      .select()
+      .from(budgets)
+      .where(eq(budgets.id, budgetId));
+    console.log(budget, budgetId, result);
     return budget[0];
   } catch (error) {}
 }
@@ -64,10 +90,10 @@ export async function deleteBudget(id, userId, db) {
   try {
     const result = await db
       .delete(budgets)
-      .where(and(eq(budgets.userId, userId)), eq(budgets.id, id));
+      .where(and(eq(budgets.userId, userId), eq(budgets.id, id)));
+    console.log(result[0].rowCount > 0 ? true : false);
     return {
-      id: result.id,
-      success: result.rowCount > 0,
+      success: result[0].affectedRows > 0,
     };
   } catch (error) {
     console.error(error);

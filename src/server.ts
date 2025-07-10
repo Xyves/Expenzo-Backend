@@ -1,12 +1,13 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { buildSchema } from "drizzle-graphql";
 import { getDb } from "./db/db.js";
-import { printSchema } from "graphql";
 import { resolvers } from "./graphql/resolvers.js";
 import { typeDefs } from "./graphql/typeDefs/user.js";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-
+import dotenv from "dotenv";
+// dotenv.config({
+//   path: `.env.${process.env.NODE_ENV || "development"}`,
+// });
 async function startApolloServer() {
   try {
     const schema = makeExecutableSchema({
